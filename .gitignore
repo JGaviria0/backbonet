@@ -1,2 +1,4 @@
 Master/node_modules
 Slave/node_modules
+Slave/.env
+Master/.env

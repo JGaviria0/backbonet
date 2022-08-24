@@ -1,22 +1,31 @@
-const { exec } = require("child_process");
+const { spawn } = require("child_process");
 const fs = require('fs').promises;
 
 
-const runTestCases = () => {
+const runTestCases = (versionCPP, nameFile) => {
 
-    console.log("Done")
+    const command = spawn( 'g++', ['-std='+versionCPP, nameFile, '-o', 'solution' ] )
     
-    // exec("g++ files/code.cpp && ./a.out", (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.log(`error: ${error.message}`);
-    //         break;
-    //     }
-    //     if (stderr) {
-    //         console.log(`stderr: ${stderr}`);
-    //         break;
-    //     }
-        
-    // });
+    command.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    command.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    command.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
+
+    setTimeout( () => {
+        if(isRun) {
+            solution.kill();
+            console.log("Time limit");
+        }
+    }, timeLimit )
+
+    console.log(solution)
 }
 
 const handle = async (req, res) => {
@@ -29,7 +38,7 @@ const handle = async (req, res) => {
         res.status(500).send(error);
     }
        
-    runTestCases()
+    runTestCases(' ');
 
     res.status(200).send("enviado, esperando respuesta")
 }
